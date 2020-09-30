@@ -8,16 +8,13 @@ class CalendarsController < ApplicationController
 
   # 予定の保存
   def create
+    # binding.pry
     Plan.create(plan_params)
     redirect_to action: :index
   end
 
+  
   private
-
-  def plan_params
-    params.require(:calendars).permit(:date, :plan)
-  end
-
   def getWeek
     wdays = ['(日)','(月)','(火)','(水)','(木)','(金)','(土)']
 
@@ -32,11 +29,15 @@ class CalendarsController < ApplicationController
     7.times do |x|
       today_plans = []
       plan = plans.map do |plan|
-        today_plans.push(plan.plan) if plan.date == @todays_date + x
-      end
+        today_plans.push(plan.plan) 
+        if plan.date == @todays_date + x
+        end
       days = { :month => (@todays_date + x).month, :date => (@todays_date+x).day, :plans => today_plans}
       @week_days.push(days)
+      end
     end
-
   end
+  def plan_params
+    params.require(:plan).permit(:date, :plan)
+  end 
 end
